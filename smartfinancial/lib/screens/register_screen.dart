@@ -14,9 +14,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   String? _errorMessage;
+  bool _isLoading = false;
 
   Future<void> _register() async {
+    if (_isLoading) return;
+
     setState(() {
+      _isLoading = true;
       _errorMessage = null;
     });
 
@@ -33,6 +37,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } catch (e) {
       setState(() {
         _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -129,7 +137,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ],
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: _register,
+                      onPressed: _isLoading ? null : _register,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF26A69A),
                         foregroundColor: Colors.white,
@@ -138,7 +146,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       ),
-                      child: const Text('Register', style: TextStyle(fontSize: 16)),
+                      child: _isLoading
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : const Text('Register', style: TextStyle(fontSize: 16)),
                     ),
                     const SizedBox(height: 16),
                     TextButton(

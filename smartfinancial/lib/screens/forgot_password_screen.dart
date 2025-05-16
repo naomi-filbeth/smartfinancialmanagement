@@ -13,9 +13,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   final TextEditingController _emailController = TextEditingController();
   String? _errorMessage;
   String? _successMessage;
+  bool _isLoading = false;
 
   Future<void> _resetPassword() async {
+    if (_isLoading) return;
+
     setState(() {
+      _isLoading = true;
       _errorMessage = null;
       _successMessage = null;
     });
@@ -30,6 +34,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     } catch (e) {
       setState(() {
         _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -112,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ],
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: _resetPassword,
+                      onPressed: _isLoading ? null : _resetPassword,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF26A69A),
                         foregroundColor: Colors.white,
@@ -121,7 +129,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       ),
-                      child: const Text('Send Reset Email', style: TextStyle(fontSize: 16)),
+                      child: _isLoading
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : const Text('Send Reset Email', style: TextStyle(fontSize: 16)),
                     ),
                     const SizedBox(height: 16),
                     TextButton(

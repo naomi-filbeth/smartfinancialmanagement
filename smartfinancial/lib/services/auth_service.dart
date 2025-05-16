@@ -29,7 +29,7 @@ class AuthService {
   );
 
   Future<Map<String, dynamic>> register(String username, String email, String password) async {
-    final url = '$_baseUrl/register/';
+    final url = '$_baseUrl/register';
     print('Register URL: $url');
     try {
       final response = await _client.post(
@@ -61,7 +61,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    final url = '$_baseUrl/login/';
+    final url = '$_baseUrl/login';
     print('Login URL: $url');
     try {
       final response = await _client.post(
@@ -92,7 +92,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> resetPassword(String email) async {
-    final url = '$_baseUrl/forgot-password/';
+    final url = '$_baseUrl/forgot-password';
     print('Reset Password URL: $url');
     try {
       final response = await _client.post(

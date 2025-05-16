@@ -14,10 +14,14 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _rememberMe = false;
   bool _isPasswordVisible = false;
+  bool _isLoading = false;
   String? _errorMessage;
 
   Future<void> _login() async {
+    if (_isLoading) return;
+
     setState(() {
+      _isLoading = true;
       _errorMessage = null;
     });
 
@@ -34,6 +38,10 @@ class _LoginScreenState extends State<LoginScreen> {
     } catch (e) {
       setState(() {
         _errorMessage = e.toString().replaceFirst('Exception: ', '');
+      });
+    } finally {
+      setState(() {
+        _isLoading = false;
       });
     }
   }
@@ -140,7 +148,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                     const SizedBox(height: 16),
                     ElevatedButton(
-                      onPressed: _login,
+                      onPressed: _isLoading ? null : _login,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF26A69A),
                         foregroundColor: Colors.white,
@@ -149,7 +157,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                       ),
-                      child: const Text('Login', style: TextStyle(fontSize: 16)),
+                      child: _isLoading
+                          ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      )
+                          : const Text('Login', style: TextStyle(fontSize: 16)),
                     ),
                     const SizedBox(height: 16),
                     TextButton(

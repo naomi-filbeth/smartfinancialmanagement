@@ -1,14 +1,19 @@
-class CorsMiddleware:
+from django.conf import settings
+from django.http import HttpResponse
+
+class EnforceCorsMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
         response = self.get_response(request)
-        response['Access-Control-Allow-Origin'] = 'http://localhost:8000'
-        response['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS, PUT, PATCH, DELETE'
-        response['Access-Control-Allow-Headers'] = 'Content-Type, Authorization, Accept, Origin'
-        response['Access-Control-Allow-Credentials'] = 'true'
+        return self.process_response(request, response)
 
-        if request.method == 'OPTIONS':
-            response.status_code = 200
+    def process_response(self, request, response):
+        origin = request.META.get('HTTP_ORIGIN')
+        if origin in settings.CORS_ALLOWED_ORIGINS:
+            response['Access-Control-Allow-Origin'] = origin
+            response['Access-Control-Allow-Credentials'] = 'true'
+            response['Access-Control-Allow-Methods'] = ', '.join(settings.CORS_ALLOW_METHODS)
+            response['Access-Control-Allow-Headers'] = ', '.join(settings.CORS_ALLOW_HEADERS)
         return response
