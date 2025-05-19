@@ -20,6 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'user',
+    'financial_management',
 ]
 
 MIDDLEWARE = [
@@ -76,10 +77,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smart_financial_management.wsgi.application'
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOWED_ORIGINS = [ '*',
-    'http://localhost:50731',
-    'http://127.0.0.1:50731',
-]
+CORS_ALLOWED_ORIGINS = [ 'http://localhost:50731', 'http://127.0.0.1:50731','http://192.168.1.106:50731']
 CORS_ALLOW_METHODS = ['GET', 'POST', 'OPTIONS', 'PUT', 'PATCH', 'DELETE']
 CORS_ALLOW_HEADERS = ['Content-Type', 'Authorization', 'Accept']
 CORS_ALLOW_CREDENTIALS = True
@@ -97,12 +95,19 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'user.User'
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
     {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
+
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+
+
+
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
