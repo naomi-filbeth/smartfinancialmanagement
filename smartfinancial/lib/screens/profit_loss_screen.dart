@@ -16,11 +16,7 @@ class ProfitLossScreen extends StatelessWidget {
         elevation: 0,
         title: const Text(
           'Profit & Loss',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -31,9 +27,7 @@ class ProfitLossScreen extends StatelessWidget {
             children: [
               Card(
                 elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -41,27 +35,16 @@ class ProfitLossScreen extends StatelessWidget {
                     children: [
                       const Text(
                         'Financial Summary',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Total Sales',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          const Text('Total Sales', style: TextStyle(fontSize: 16)),
                           Text(
                             '\$${salesProvider.totalSales.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF26A69A),
-                            ),
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Color(0xFF26A69A)),
                           ),
                         ],
                       ),
@@ -69,17 +52,10 @@ class ProfitLossScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Total Cost',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          const Text('Total Cost', style: TextStyle(fontSize: 16)),
                           Text(
                             '\$${salesProvider.totalCost.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.red,
-                            ),
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.red),
                           ),
                         ],
                       ),
@@ -87,10 +63,7 @@ class ProfitLossScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
-                            'Total Profit',
-                            style: TextStyle(fontSize: 16),
-                          ),
+                          const Text('Total Profit', style: TextStyle(fontSize: 16)),
                           Text(
                             '\$${salesProvider.totalProfit.toStringAsFixed(2)}',
                             style: TextStyle(
@@ -108,11 +81,7 @@ class ProfitLossScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Text(
                 'Sales Records',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 8),
               salesProvider.sales.isEmpty
@@ -128,15 +97,12 @@ class ProfitLossScreen extends StatelessWidget {
                 itemCount: salesProvider.sales.length,
                 itemBuilder: (context, index) {
                   final sale = salesProvider.sales[index];
-                  final totalPrice = sale['quantity'] * sale['price'];
-                  final totalCost = sale['quantity'] * sale['cost'];
+                  final totalPrice = (sale['quantity'] as num) * (sale['price'] as num);
+                  final totalCost = (sale['quantity'] as num) * (sale['cost'] as num);
                   final profit = totalPrice - totalCost;
-
                   return Card(
                     elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     child: ListTile(
                       title: Text(
                         '${sale['product']} (x${sale['quantity']})',
@@ -145,9 +111,7 @@ class ProfitLossScreen extends StatelessWidget {
                       subtitle: Text('Date: ${sale['date']}'),
                       trailing: Text(
                         'Profit: \$${profit.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: profit >= 0 ? Colors.green : Colors.red,
-                        ),
+                        style: TextStyle(color: profit >= 0 ? Colors.green : Colors.red),
                       ),
                     ),
                   );

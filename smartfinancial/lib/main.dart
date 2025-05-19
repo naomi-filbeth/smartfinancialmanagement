@@ -51,22 +51,21 @@ class AuthCheckScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        return FutureBuilder<bool>(
-          future: authProvider.checkAuthentication(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
-            }
-            if (snapshot.hasData && snapshot.data == true) {
-              return const MainScreen();
-            }
-            return const LoginScreen();
-          },
-        );
+    final authProvider = Provider.of<AuthProvider>(context);
+    final salesProvider = Provider.of<SalesProvider>(context);
+
+    return FutureBuilder<bool>(
+      future: authProvider.checkAuthentication(salesProvider),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        if (snapshot.hasData && snapshot.data == true) {
+          return const MainScreen();
+        }
+        return const LoginScreen();
       },
     );
   }

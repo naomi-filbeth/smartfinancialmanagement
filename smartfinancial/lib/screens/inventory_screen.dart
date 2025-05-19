@@ -25,44 +25,29 @@ class InventoryScreen extends StatelessWidget {
                   children: [
                     TextField(
                       controller: nameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Product Name',
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: const InputDecoration(labelText: 'Product Name', border: OutlineInputBorder()),
                     ),
                     const SizedBox(height: 8),
                     TextField(
                       controller: priceController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Selling Price',
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: const InputDecoration(labelText: 'Selling Price', border: OutlineInputBorder()),
                     ),
                     const SizedBox(height: 8),
                     TextField(
                       controller: costController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Cost Price',
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: const InputDecoration(labelText: 'Cost Price', border: OutlineInputBorder()),
                     ),
                     const SizedBox(height: 8),
                     TextField(
                       controller: stockController,
                       keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Initial Stock',
-                        border: OutlineInputBorder(),
-                      ),
+                      decoration: const InputDecoration(labelText: 'Initial Stock', border: OutlineInputBorder()),
                     ),
                     if (errorMessage != null) ...[
                       const SizedBox(height: 8),
-                      Text(
-                        errorMessage!,
-                        style: const TextStyle(color: Colors.red, fontSize: 14),
-                      ),
+                      Text(errorMessage!, style: const TextStyle(color: Colors.red, fontSize: 14)),
                     ],
                   ],
                 ),
@@ -80,23 +65,18 @@ class InventoryScreen extends StatelessWidget {
                     final stock = int.tryParse(stockController.text.trim());
 
                     if (name.isEmpty || price == null || cost == null || stock == null || price <= 0 || cost <= 0 || stock < 0) {
-                      setState(() {
-                        errorMessage = 'Please fill in all fields with valid values.';
-                      });
+                      setState(() => errorMessage = 'Please fill in all fields with valid values.');
                       return;
                     }
 
                     try {
-                      Provider.of<SalesProvider>(context, listen: false)
-                          .addProduct(name, price, cost, stock);
+                      Provider.of<SalesProvider>(context, listen: false).addProduct(name, price, cost, stock);
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Product added successfully')),
                       );
                     } catch (e) {
-                      setState(() {
-                        errorMessage = e.toString().replaceFirst('Exception: ', '');
-                      });
+                      setState(() => errorMessage = e.toString().replaceFirst('Exception: ', ''));
                     }
                   },
                   child: const Text('Add'),
@@ -148,11 +128,7 @@ class InventoryScreen extends StatelessWidget {
         elevation: 0,
         title: const Text(
           'Inventory',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
         ),
       ),
       body: SingleChildScrollView(
@@ -163,11 +139,7 @@ class InventoryScreen extends StatelessWidget {
             children: [
               const Text(
                 'Product Stock',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 8),
               salesProvider.products.isEmpty
@@ -183,25 +155,23 @@ class InventoryScreen extends StatelessWidget {
                 itemCount: salesProvider.products.length,
                 itemBuilder: (context, index) {
                   final product = salesProvider.products[index];
+                  final price = (product['price'] as num?)?.toDouble() ?? 0.0;
+                  final stock = (product['stock'] as num?)?.toInt() ?? 0;
                   return Card(
                     elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     child: ListTile(
                       title: Text(
-                        product['name'],
+                        product['name'] ?? 'Unknown',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
-                      subtitle: Text('Price: \$${product['price'].toStringAsFixed(2)}'),
+                      subtitle: Text('Price: \$${price.toStringAsFixed(2)}'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            'Stock: ${product['stock']}',
-                            style: TextStyle(
-                              color: product['stock'] <= 5 ? Colors.red : Colors.black54,
-                            ),
+                            'Stock: $stock',
+                            style: TextStyle(color: stock <= 5 ? Colors.red : Colors.black54),
                           ),
                           const SizedBox(width: 16),
                           IconButton(

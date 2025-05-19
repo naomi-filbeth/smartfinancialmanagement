@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../providers/sales_provider.dart'; // Import SalesProvider
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -26,10 +27,13 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      await Provider.of<AuthProvider>(context, listen: false).login(
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      final salesProvider = Provider.of<SalesProvider>(context, listen: false);
+      await authProvider.login(
         _usernameController.text.trim(),
         _passwordController.text.trim(),
         _rememberMe,
+        salesProvider,
       );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login successful')),

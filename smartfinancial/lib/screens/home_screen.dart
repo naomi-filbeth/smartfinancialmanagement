@@ -19,17 +19,13 @@ class HomeScreen extends StatelessWidget {
         elevation: 0,
         title: const Text(
           'smartfinancial Management',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
-              await authProvider.logout();
+              await authProvider.logout(salesProvider);
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
@@ -43,9 +39,7 @@ class HomeScreen extends StatelessWidget {
             children: [
               Card(
                 elevation: 8,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -53,46 +47,27 @@ class HomeScreen extends StatelessWidget {
                     children: [
                       const Text(
                         'Welcome Back!',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         authProvider.userName ?? 'User',
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
-                        ),
+                        style: const TextStyle(fontSize: 18, color: Colors.grey),
                       ),
                       const SizedBox(height: 16),
                       const Text(
                         'Total Sales',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(height: 8),
                       Text(
                         '\$${salesProvider.totalSales.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          fontSize: 32,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF26A69A),
-                        ),
+                        style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF26A69A)),
                       ),
                       const SizedBox(height: 16),
                       const Text(
                         'Total Profit',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -110,11 +85,7 @@ class HomeScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Text(
                 'Recent Sales',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
               const SizedBox(height: 8),
               salesProvider.sales.isEmpty
@@ -124,9 +95,7 @@ class HomeScreen extends StatelessWidget {
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               )
-                  : SalesList(
-                sales: salesProvider.sales.take(5).toList(),
-              ),
+                  : SalesList(sales: salesProvider.sales.take(5).toList()),
             ],
           ),
         ),

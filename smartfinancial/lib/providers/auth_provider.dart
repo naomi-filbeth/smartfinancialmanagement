@@ -3,12 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../services/auth_service.dart';
+import '../providers/sales_provider.dart'; // Import SalesProvider
 
 class AuthProvider with ChangeNotifier {
   String? _token;
-  String?
-
-  _userName;
+  String? _userName;
   bool _rememberMe = false;
   final AuthService _authService = AuthService();
 
@@ -28,7 +27,7 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> login(String username, String password, bool rememberMe) async {
+  Future<void> login(String username, String password, bool rememberMe, SalesProvider salesProvider) async {
     final result = await _authService.login(username, password);
     if (result['success']) {
       _token = result['token'];
@@ -40,13 +39,17 @@ class AuthProvider with ChangeNotifier {
         await prefs.setString('user_name', username);
         await prefs.setBool('remember_me', true);
       }
+      // Set the user in SalesProvider with username and token
+      await salesProvider.setUser(username, _token!);
       notifyListeners();
     } else {
       throw Exception(result['message']);
     }
   }
 
-  Future<void> logout() async {
+  Future<void> logout(SalesProvider salesProvider) async {
+    // Clear SalesProvider data
+    await salesProvider.clearUser();
     _token = null;
     _userName = null;
     final prefs = await SharedPreferences.getInstance();
@@ -66,12 +69,12 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> checkAuthentication() async {
+  Future<bool> checkAuthentication(SalesProvider salesProvider) async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('auth_token');
     if (token == null) return false;
 
-    final url = '${_authService.baseUrl}/validate-token/';  // Use public getter
+    final url = '${_authService.baseUrl}/validate-token/';
     print('Validate Token URL: $url');
     try {
       final response = await http.get(
@@ -83,6 +86,10 @@ class AuthProvider with ChangeNotifier {
       if (response.statusCode == 200 && data['success']) {
         _token = token;
         _userName = prefs.getString('user_name');
+        // Set the user in SalesProvider with username and token
+        if (_userName != null) {
+          await salesProvider.setUser(_userName!, _token!);
+        }
         return true;
       }
       return false;

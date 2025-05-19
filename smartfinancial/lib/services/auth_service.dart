@@ -1,25 +1,10 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
-import 'dart:io' show Platform;
 
 class AuthService {
-  static const String _baseUrlWeb = 'http://127.0.0.1:8000/api/auth';
-  static const String _baseUrlEmulator = 'http://192.168.1.106:8000/api/auth';
-  static const String _baseUrlDevice = 'http://192.168.1.106:8000/api/auth';
+  static const String _baseUrl = 'http://192.168.1.106:8000/api/auth';
 
-  String get _baseUrl {
-    if (kIsWeb) {
-      return _baseUrlWeb;
-    } else if (Platform.isAndroid && !kDebugMode) {
-      return _baseUrlDevice;
-    } else {
-      return _baseUrlEmulator;
-    }
-  }
-
-  // Public getter for the base URL
   String get baseUrl => _baseUrl;
 
   final RetryClient _client = RetryClient(
@@ -29,7 +14,7 @@ class AuthService {
   );
 
   Future<Map<String, dynamic>> register(String username, String email, String password) async {
-    final url = '$_baseUrl/register';
+    final url = '$_baseUrl/register/';
     print('Register URL: $url');
     try {
       final response = await _client.post(
@@ -61,7 +46,7 @@ class AuthService {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    final url = '$_baseUrl/login';
+    final url = '$_baseUrl/login/';
     print('Login URL: $url');
     try {
       final response = await _client.post(
@@ -75,7 +60,8 @@ class AuthService {
       print('Login Response: ${response.statusCode} ${response.body}');
       final data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['success']) {
-        return {'success': true, 'token': data['token'], 'message': 'Login successful'};
+        final accessToken = data['token']; // Use the token directly as a string
+        return {'success': true, 'token': accessToken, 'message': 'Login successful'};
       } else {
         return {'success': false, 'message': data['message'] ?? 'Login failed'};
       }
