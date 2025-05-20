@@ -12,6 +12,11 @@ class HomeScreen extends StatelessWidget {
     final authProvider = Provider.of<AuthProvider>(context);
     final salesProvider = Provider.of<SalesProvider>(context);
 
+    // Debug: Log sales data
+    print('HomeScreen - Sales: ${salesProvider.sales}');
+    print('HomeScreen - Total Sales: ${salesProvider.totalSales}');
+    print('HomeScreen - Total Profit: ${salesProvider.totalProfit}');
+
     return Scaffold(
       backgroundColor: const Color(0xFF26A69A),
       appBar: AppBar(
@@ -23,9 +28,24 @@ class HomeScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
+            icon: const Icon(Icons.refresh, color: Colors.white),
+            onPressed: () async {
+              try {
+                // await salesProvider.loadUserData();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Data refreshed')),
+                );
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to refresh data: $e')),
+                );
+              }
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
-              await authProvider.logout(salesProvider);
+              await authProvider.logout();
               Navigator.pushReplacementNamed(context, '/login');
             },
           ),
@@ -61,7 +81,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '\$${salesProvider.totalSales.toStringAsFixed(2)}',
+                        'Tsh${salesProvider.totalSales.toStringAsFixed(2)}',
                         style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF26A69A)),
                       ),
                       const SizedBox(height: 16),
@@ -71,7 +91,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        '\$${salesProvider.totalProfit.toStringAsFixed(2)}',
+                        'Tsh${salesProvider.totalProfit.toStringAsFixed(2)}',
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -91,7 +111,7 @@ class HomeScreen extends StatelessWidget {
               salesProvider.sales.isEmpty
                   ? const Center(
                 child: Text(
-                  'No sales recorded yet. Start by adding a product and recording a sale!',
+                  'No sales recorded yet. Add a product and record a sale!',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 ),
               )

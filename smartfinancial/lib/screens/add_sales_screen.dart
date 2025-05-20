@@ -27,11 +27,15 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
         lastDate: DateTime(2101),
       );
       if (picked != null && picked != _selectedDate && mounted) {
-        setState(() => _selectedDate = picked);
+        setState(() {
+          _selectedDate = picked;
+        });
       }
     } catch (e) {
       if (mounted) {
-        setState(() => _errorMessage = 'Error selecting date: ${e.toString()}');
+        setState(() {
+          _errorMessage = 'Error selecting date: ${e.toString()}';
+        });
       }
     }
   }
@@ -63,10 +67,9 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
 
       await Future.microtask(() {
         salesProvider.addSale({
-          'product': product['id'],
+          'product': _selectedProduct!,
           'quantity': quantity,
-          'price': (product['price'] as num?)?.toDouble() ?? 0.0,
-          'cost': (product['cost'] as num?)?.toDouble() ?? 0.0,
+          'price': product['price'] as double,
           'date': _selectedDate.toString().split(' ')[0],
         });
       });
@@ -81,7 +84,7 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Sale recorded successfully')),
         );
-        widget.onSaleRecorded();
+        widget.onSaleRecorded(); // Call the callback to switch to HomeScreen
       }
     } catch (e) {
       if (mounted) {
@@ -102,7 +105,6 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
   @override
   Widget build(BuildContext context) {
     final salesProvider = Provider.of<SalesProvider>(context);
-    print('Products in AddSaleScreen: ${salesProvider.products}');
 
     return Column(
       children: [
@@ -118,12 +120,18 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                     elevation: 0,
                     title: const Text(
                       'Add Sale',
-                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                   Card(
                     elevation: 8,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -131,7 +139,11 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                         children: [
                           const Text(
                             'New Sale',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black87,
+                            ),
                           ),
                           const SizedBox(height: 16),
                           if (salesProvider.products.isEmpty)
@@ -145,15 +157,16 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                               decoration: InputDecoration(
                                 labelText: 'Product',
                                 prefixIcon: const Icon(Icons.production_quantity_limits, color: Colors.grey),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                                 filled: true,
                                 fillColor: Colors.grey[100],
                               ),
                               items: salesProvider.products.map((product) {
-                                final stock = (product['stock'] as num?)?.toInt() ?? 0;
                                 return DropdownMenuItem<String>(
                                   value: product['name'],
-                                  child: Text('${product['name'] ?? 'Unknown'} (Stock: $stock)'),
+                                  child: Text('${product['name']} (Stock: ${product['stock']})'),
                                 );
                               }).toList(),
                               onChanged: (value) {
@@ -174,13 +187,17 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                             decoration: InputDecoration(
                               labelText: 'Quantity',
                               prefixIcon: const Icon(Icons.numbers, color: Colors.grey),
-                              border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                               filled: true,
                               fillColor: Colors.grey[100],
                             ),
                             onChanged: (value) {
                               if (mounted) {
-                                setState(() => _errorMessage = null);
+                                setState(() {
+                                  _errorMessage = null;
+                                });
                               }
                             },
                           ),
@@ -225,14 +242,19 @@ class _AddSaleScreenState extends State<AddSaleScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF26A69A),
                               foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                             ),
                             child: _isLoading
                                 ? const SizedBox(
                               width: 20,
                               height: 20,
-                              child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
                             )
                                 : const Text('Record Sale', style: TextStyle(fontSize: 16)),
                           ),

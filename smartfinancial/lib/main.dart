@@ -52,10 +52,10 @@ class AuthCheckScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authProvider = Provider.of<AuthProvider>(context);
-    final salesProvider = Provider.of<SalesProvider>(context);
+    Provider.of<SalesProvider>(context);
 
     return FutureBuilder<bool>(
-      future: authProvider.checkAuthentication(salesProvider),
+      future: authProvider.checkAuthentication(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(

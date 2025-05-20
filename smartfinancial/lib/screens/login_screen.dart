@@ -28,12 +28,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
     try {
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-      final salesProvider = Provider.of<SalesProvider>(context, listen: false);
+      Provider.of<SalesProvider>(context, listen: false);
       await authProvider.login(
         _usernameController.text.trim(),
         _passwordController.text.trim(),
         _rememberMe,
-        salesProvider,
+        // salesProvider,
       );
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Login successful')),

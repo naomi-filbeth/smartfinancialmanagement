@@ -11,15 +11,15 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _navigateToNextScreen();
+    _initializeApp();
   }
 
-  Future<void> _navigateToNextScreen() async {
-    // Wait for 3 seconds to display the splash screen
-    await Future.delayed(const Duration(seconds: 10));
+  Future<void> _initializeApp() async {
+    print('Initializing app...');
+    await Future.delayed(const Duration(seconds: 2)); // Simulate loading
+    print('Navigation to login screen');
     if (mounted) {
-      // Navigate to AuthCheckScreen
-      Navigator.pushReplacementNamed(context, '/check-auth');
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
@@ -27,42 +27,24 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF26A69A),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(
-                    Icons.account_balance,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Smart Financial Management',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      fontFamily: 'Roboto',
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.account_balance, size: 100, color: Colors.white),
+            const SizedBox(height: 16),
+            const Text(
+              'Smart Financial Management',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32.0),
-            child: CircularProgressIndicator(
-              color: Colors.white,
-              strokeWidth: 2,
-            ),
-          ),
-        ],
+            const SizedBox(height: 32),
+            const CircularProgressIndicator(color: Colors.white),
+          ],
+        ),
       ),
     );
   }

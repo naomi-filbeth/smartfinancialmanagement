@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:http/retry.dart';
 
 class AuthService {
-  static const String _baseUrl = 'http://192.168.1.106:8000/api/auth';
+  static const String _baseUrl = 'http://127.0.0.1:8000/api/auth';
 
   String get baseUrl => _baseUrl;
 

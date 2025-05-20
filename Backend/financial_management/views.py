@@ -5,6 +5,7 @@ from .models import Product, Sale, TopSellingProduct
 from .serializers import ProductSerializer, SaleSerializer, TopSellingProductSerializer
 from django.db.models import Sum
 from django.utils import timezone
+from django.db import transaction
 
 class UserProductListCreate(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
@@ -24,14 +25,21 @@ class UserSaleListCreate(generics.ListCreateAPIView):
         return Sale.objects.filter(user=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        with transaction.atomic():
+            sale = serializer.save(user=self.request.user)
+            product = sale.product
+            quantity_sold = sale.quantity
+            if product.stock < quantity_sold:
+                raise PermissionDenied("Insufficient stock to complete this sale.")
+            product.stock -= quantity_sold
+            product.save()
+
 
 class UserTopSellingProductList(generics.ListAPIView):
     serializer_class = TopSellingProductSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        # Calculate top-selling products based on sales
         sales = Sale.objects.filter(user=self.request.user).values('product').annotate(total_quantity=Sum('quantity'))
         top_products = []
         for sale in sales:

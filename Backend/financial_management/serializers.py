@@ -38,8 +38,10 @@ class SaleSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 class TopSellingProductSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
+    name = serializers.CharField(source='product.name', max_length=100)
     quantity = serializers.IntegerField()
 
     class Meta:
         fields = ['name', 'quantity']
+
+
