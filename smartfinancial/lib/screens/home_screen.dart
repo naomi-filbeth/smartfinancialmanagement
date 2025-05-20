@@ -23,25 +23,25 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: const Text(
-          'smartfinancial Management',
+          'smart financial Management',
           style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            onPressed: () async {
-              try {
-                // await salesProvider.loadUserData();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Data refreshed')),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Failed to refresh data: $e')),
-                );
-              }
-            },
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.refresh, color: Colors.white),
+          //   onPressed: () async {
+          //     try {
+          //       // await salesProvider.loadUserData();
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //         const SnackBar(content: Text('Data refreshed')),
+          //       );
+          //     } catch (e) {
+          //       ScaffoldMessenger.of(context).showSnackBar(
+          //         SnackBar(content: Text('Failed to refresh data: $e')),
+          //       );
+          //     }
+          //   },
+          // ),
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () async {
